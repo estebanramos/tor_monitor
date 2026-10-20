@@ -18,11 +18,11 @@ console = Console()
 
 def circuits_table(ctl) -> Table:
     t = Table(title="Circuitos BUILT")
-    for col in ("Circ", "Purpose", "Salto", "Nickname", "IP", "Flags"):
+    for col in ("Circ", "Purpose", "Salto", "País", "Nickname", "IP", "Flags"):
         t.add_column(col)
     for c in tc.built_circuits(ctl):
         for i, h in enumerate(c.hops):
-            row = [c.id if i == 0 else "", c.purpose if i == 0 else "", h.role, f"{country_flag(h.country)} \"{country_name(h.country)}\" {h.nickname}", h.ip, fmt_flags(h.flags)]
+            row = [c.id if i == 0 else "", c.purpose if i == 0 else "", h.role, f"{country_flag(h.country)} \"{country_name(h.country)}\"", h.nickname, h.ip, fmt_flags(h.flags)]
             t.add_row(*row)
         t.add_section()
     return t
@@ -83,7 +83,7 @@ def main() -> None:
     console.print(f"[green]Conectado a Tor {ctl.get_version()}[/green]")
     try:
         while True:
-            op = Prompt.ask("[c]ircuitos  [m]onitor  [n]ueva identidad  [e]xit por país  [b]uscar nodos  [q]salir",
+            op = Prompt.ask("\\[c]ircuitos  \\[m]onitor  \\[n]ueva identidad  \\[e]xit por país  \\[b]uscar nodos  \\[q]salir",
                             choices=["c", "m", "n", "e", "b", "q"], default="c")
             try:
                 if op == "c":

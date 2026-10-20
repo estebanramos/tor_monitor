@@ -101,7 +101,7 @@ Los tests cubren solo `utils.py`. La parte que habla con Tor requiere un Tor en 
 
 ## Estado y limitaciones
 
-- Desarrollada con pruebas de importación y de `utils.py`. La interacción con un Tor en vivo (listado de circuitos, monitor, `ExitNodes`, `get_network_statuses()` con Tor 0.4.9) no está validada de extremo a extremo: si algo falla, abre un issue con el error.
+- Probada manualmente contra Tor 0.4.9 (Debian/Ubuntu): conexión, circuitos, monitor, `NEWNYM`, exit por país y búsqueda de nodos. Solo `utils.py` tiene tests automáticos. En otras versiones de Tor o distros puede haber diferencias: abre un issue con el error.
 - La búsqueda por país hace una consulta a Tor por relay (~9000) y tarda unos segundos.
 - Fijar el país de salida **reduce tu anonimato** (conjunto de relays más pequeño, tráfico más fácil de correlacionar). Úsalo para pruebas o para acceder a contenido por región, no como configuración habitual.
 - Si el país no tiene exits, Tor no puede construir circuitos con `StrictNodes=1`; la herramienta lo comprueba antes de aplicarlo.

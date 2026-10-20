@@ -17,4 +17,4 @@ def fmt_flags(flags: list[str]) -> str:
 
 def country_name(cc: str) -> str:
     c = pycountry.countries.get(alpha_2=cc.upper()) if len(cc) == 2 else None
-    return c.name if c else "Desconocido"
+    return c.name if c else "Unknown"

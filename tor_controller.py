@@ -41,20 +41,20 @@ def connect(password: str | None = None) -> Controller:
             # Controller.from_port opens the TCP socket to 127.0.0.1:<port>
             ctl = Controller.from_port(port=port)
         except Exception as e:  # stem raises SocketError (ConnectionRefused) when closed
-            errors.append(f"{port}: puerto cerrado ({e})")
+            errors.append(f"{port}: port closed ({e})")
             continue
         try:
             # authenticate() auto-picks NONE / SAFECOOKIE / COOKIE / PASSWORD from PROTOCOLINFO
             ctl.authenticate(password=password)
             return ctl
         except UnreadableCookieFile:
-            errors.append(f"{port}: sin permiso para leer la cookie (añade tu usuario al grupo debian-tor)")
+            errors.append(f"{port}: cannot read the auth cookie (add your user to the debian-tor group)")
         except (MissingPassword, IncorrectPassword):
-            errors.append(f"{port}: requiere contraseña (--password) o es incorrecta")
+            errors.append(f"{port}: password required (--password) or incorrect")
         except AuthenticationFailure as e:
-            errors.append(f"{port}: fallo de autenticación ({e})")
+            errors.append(f"{port}: authentication failed ({e})")
         ctl.close()
-    raise TorError("No se pudo conectar a Tor:\n  " + "\n  ".join(errors))
+    raise TorError("Could not connect to Tor:\n  " + "\n  ".join(errors))
 
 
 def built_circuits(ctl: Controller) -> list[Circuit]:
@@ -93,7 +93,7 @@ def listen(ctl: Controller, on_stream: Callable[[StreamEvent], None],
 def new_identity(ctl: Controller) -> None:
     """Clean existing circuits for new connections (rotates exit IP)."""
     if not ctl.is_newnym_available():
-        raise TorError(f"NEWNYM limitado por Tor, espera {ctl.get_newnym_wait():.0f}s")
+        raise TorError(f"NEWNYM rate-limited by Tor, wait {ctl.get_newnym_wait():.0f}s")
     ctl.signal(Signal.NEWNYM)  # SIGNAL NEWNYM
 
 
@@ -108,7 +108,7 @@ def set_exit_country(ctl: Controller, cc: str | None) -> None:
         else:
             ctl.reset_conf("ExitNodes", "StrictNodes")  # RESETCONF
     except ControllerError as e:
-        raise TorError(f"Tor rechazó la configuración: {e}")
+        raise TorError(f"Tor rejected the configuration: {e}")
     if ctl.is_newnym_available():
         ctl.signal(Signal.NEWNYM)
 

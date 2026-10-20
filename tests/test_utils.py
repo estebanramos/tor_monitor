@@ -14,8 +14,8 @@ def test_country_flag():
 
 def test_country_name():
     assert country_name("CZ") == "Czechia"
-    assert country_name("??") == "Desconocido"
-    assert country_name("") == "Desconocido"
+    assert country_name("??") == "Unknown"
+    assert country_name("") == "Unknown"
 
 
 def test_fmt_flags():
